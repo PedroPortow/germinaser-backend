@@ -5,3 +5,7 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+Role.create(name: "Owner", description: "Has all permissions and doesnt have to use credits")
+Role.create(name: "Admin", description: "Has all permissions but has to use credits")
+Role.create(name: "User", description: "Normal user")

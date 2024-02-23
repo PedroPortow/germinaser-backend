@@ -1,0 +1,46 @@
+class BookingsController < ApplicationController
+  before_action :set_room, only: [:create]
+
+  # GET /bookings
+  def index
+    @bookings = current_user.bookings
+    render json: @bookings
+  end
+
+  # POST /bookings
+  def create
+    if current_user.is_owner || current_user.credits > 0
+      @booking = @room.bookings.build(booking_params.merge(user: current_user))
+
+      if @booking.save
+        current_user.decrement!(:credits) unless current_user.is_owner
+        render json: @booking, status: :created
+      else
+        render json: @booking.errors, status: :unprocessable_entity
+      end
+    else
+      render json: { error: 'Créditos insuficientes' }, status: :forbidden
+    end
+  end
+
+  # DELETE /bookings/:id
+  def destroy
+    @booking = current_user.bookings.find(params[:id])
+    @booking.destroy
+    render json: { message: 'Reserva cancelada com sucesso.' }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Reserva não encontrada." }, status: :not_found
+  end
+
+  private
+
+  def set_room
+    @room = Room.find(params[:room_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Sala não encontrada." }, status: :not_found
+  end
+
+  def booking_params
+    params.require(:booking).permit(:start_time, :end_time)
+  end
+end
