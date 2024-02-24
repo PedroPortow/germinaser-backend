@@ -26,11 +26,23 @@ class BookingsController < ApplicationController
   # DELETE /bookings/:id
   def destroy
     @booking = current_user.bookings.find(params[:id])
-    @booking.destroy
-    render json: { message: 'Reserva cancelada com sucesso.' }, status: :ok
+    time_until_booking = @booking.start_time - Time.current
+
+    if time_until_booking > 24.hours
+      current_user.increment!(:credits) unless current_user.is_owner?
+      @booking.destroy
+      message = 'Reserva cancelada com reembolso de crédito.'
+    else
+      @booking.update(status: , cancelled_by_user: current_user.id, cancelled_at: Time.current)
+      @booking.destroy
+      message = 'Reserva cancelada sem reembolso de crédito.'
+    end
+
+    render json: { message: message }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Reserva não encontrada." }, status: :not_found
   end
+
 
   private
 
