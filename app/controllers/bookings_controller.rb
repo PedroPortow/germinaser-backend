@@ -33,7 +33,6 @@ class BookingsController < ApplicationController
       @booking.destroy
       message = 'Reserva cancelada com reembolso de crédito.'
     else
-      @booking.update(status: , cancelled_by_user: current_user.id, cancelled_at: Time.current)
       @booking.destroy
       message = 'Reserva cancelada sem reembolso de crédito.'
     end
