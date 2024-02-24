@@ -2,7 +2,6 @@ class ApplicationController < ActionController::API
   include JsonWebToken
   before_action :authenticate_request
 
-  # Retorna o usuário autenticado atualmente baseado no token JWT
   def current_user
     @current_user
   end

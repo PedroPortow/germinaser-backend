@@ -14,6 +14,8 @@ class BookingsController < ApplicationController
 
       if @booking.save
         current_user.decrement!(:credits) unless current_user.is_owner
+
+        BookingRefundJob.perform_later(@booking.id)
         render json: @booking, status: :created
       else
         render json: @booking.errors, status: :unprocessable_entity
