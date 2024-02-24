@@ -14,6 +14,8 @@ gem "puma", "~> 5.0"
 
 gem 'byebug', '~> 9.0', '>= 9.0.6'
 
+gem 'sidekiq'
+
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"

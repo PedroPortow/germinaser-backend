@@ -33,8 +33,10 @@ class BookingsController < ApplicationController
       @booking.destroy
       message = 'Reserva cancelada com reembolso de crédito.'
     else
-      @booking.destroy
-      message = 'Reserva cancelada sem reembolso de crédito.'
+      @booking.cancelled!
+      @booking.canceled_at = Time.current
+      @booking.save
+      message = 'Seu crédito será reembolsado caso alguém reserve esse horário.'
     end
 
     render json: { message: message }, status: :ok
