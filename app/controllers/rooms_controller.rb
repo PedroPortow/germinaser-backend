@@ -1,5 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :update, :destroy]
+  before_action :check_admin_or_owner, only: [:create, :update]
 
   # GET /rooms
   def index
@@ -46,5 +47,9 @@ class RoomsController < ApplicationController
 
     def room_params
       params.require(:room).permit(:name, :clinic_id)
+    end
+
+    def check_admin_or_owner
+      current_user.admin? || current_user.owner?
     end
 end
