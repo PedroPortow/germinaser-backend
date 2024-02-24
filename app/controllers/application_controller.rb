@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   include JsonWebToken
-  before_action :authenticate_request
+  # before_action :authenticate_request
+  before_action :set_current_user
 
   def current_user
     @current_user
@@ -21,7 +22,7 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def set_current_user(user_id)
+  def set_current_user(user_id = 1)
     @current_user = User.find(user_id)
   end
 end

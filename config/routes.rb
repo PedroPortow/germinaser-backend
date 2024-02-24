@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :users
   
   resources :rooms
+  resources :clinics
   resources :booking
   post 'auth/login', to: 'auth#login'
 end

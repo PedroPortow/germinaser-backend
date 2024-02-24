@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :update, :destroy]
-  before_action :check_admin_or_owner, only: [:create, :update]
+  before_action :check_admin_or_owner, only: [:create, :update, :destroy]
 
   # GET /rooms
   def index
