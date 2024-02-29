@@ -9,11 +9,11 @@ class BookingsController < ApplicationController
 
   # POST /bookings
   def create
-    if current_user.is_owner || current_user.credits > 0
+    if current_user.owner? || current_user.credits > 0
       @booking = @room.bookings.build(booking_params.merge(user: current_user))
 
       if @booking.save
-        current_user.decrement!(:credits) unless current_user.is_owner
+        current_user.decrement!(:credits) unless current_user.owner?
 
         BookingRefundJob.perform_later(@booking.id)
         render json: @booking, status: :created
@@ -31,7 +31,7 @@ class BookingsController < ApplicationController
     time_until_booking = @booking.start_time - Time.current
 
     if time_until_booking > 24.hours
-      current_user.increment!(:credits) unless current_user.is_owner?
+      current_user.increment!(:credits) unless current_user.owner??
       @booking.destroy
       message = 'Reserva cancelada com reembolso de crédito.'
     else
@@ -46,6 +46,13 @@ class BookingsController < ApplicationController
     render json: { error: "Reserva não encontrada." }, status: :not_found
   end
 
+  def available_slots
+    date = params[:date].to_date
+    room_id = params[:room_id]
+    available_slots = Booking.available_slots(date, room_id)
+
+    render json: available_slots.map { |slot| slot.strftime('%Y-%m-%d %H:%M:%S') }
+  end
 
   private
 

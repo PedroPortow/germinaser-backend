@@ -15,7 +15,7 @@ admin_role = Role.find_by(name: "Admin").id
 user_role = Role.find_by(name: "User").id
 
 User.create(name: "Owner", email: "owner@gmail.com", password: "123456", role_id: owner_role)
-User.create(name: "Admin", email: "admin@gmail.com", password: "123456", role_id: admin_role, credits: 999)
+User.create(name: "Admin", email: "admin@gmail.com", password: "123456", role_id: admin_role, credits: 50)
 User.create(name: "User",  email: "user@gmail.com", password: "123456", role_id: user_role, credits: 50)
 
 Clinic.create(name: "Casa 1", adress: "endereco legal")
@@ -29,4 +29,10 @@ Room.create(name: "Sala 2", clinic_id: first_clinic)
 Room.create(name: "Sala 1", clinic_id: second_clinic)
 Room.create(name: "Sala 2", clinic_id: second_clinic)
 
-
+Booking.create(
+  room_id: 1, 
+  user_id: 2, 
+  start_time: Time.zone.now.beginning_of_day + 8.hours, 
+  end_time: Time.zone.now.beginning_of_day + 9.hours, 
+  status: 1
+)

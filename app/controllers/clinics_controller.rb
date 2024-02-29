@@ -16,6 +16,7 @@ class ClinicsController < ApplicationController
   # POST /clinics
   def create
     @clinic = Clinic.new(clinic_params)
+    byebug
     if @clinic.save
       render json: @clinic, status: :created, location: @clinic
     else
@@ -52,6 +53,7 @@ class ClinicsController < ApplicationController
 
     def check_admin_or_owner
       unless current_user.admin? || current_user.owner?
+        byebug
         render json: { error: "Not authorized" }, status: :unauthorized
         return
       end
