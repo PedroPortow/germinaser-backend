@@ -10,7 +10,7 @@ class BookingsController < ApplicationController
   # POST /bookings
   def create
     if current_user.owner? || current_user.credits > 0
-      if Booking.start_time_available?(@room.id, booking_params[:start_time])
+      if Booking.is_available?(@room.id, booking_params[:start_time])
         @booking = @room.bookings.build(booking_params.merge(user: current_user))
   
         if @booking.save
@@ -68,6 +68,6 @@ class BookingsController < ApplicationController
   end
 
   def booking_params
-    params.require(:booking).permit(:start_time, :end_time, :room_id)
+    params.require(:booking).permit(:start_time, :room_id)
   end
 end
