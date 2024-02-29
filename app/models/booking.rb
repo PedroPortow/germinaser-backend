@@ -1,6 +1,8 @@
 class Booking < ApplicationRecord
   belongs_to :room
   belongs_to :user
+  before_create :set_default_status
+  before_create :set_default_status
 
   has_one :cancelation
 
@@ -21,5 +23,13 @@ class Booking < ApplicationRecord
     slots
   end
 
-  
+  def self.start_time_available?(room_id, start_time)
+    !exists?(room_id: room_id, start_time: start_time)
+  end
+
+  private
+
+  def set_default_status
+    self.status ||= :active
+  end
 end

@@ -10,15 +10,19 @@ class BookingsController < ApplicationController
   # POST /bookings
   def create
     if current_user.owner? || current_user.credits > 0
-      @booking = @room.bookings.build(booking_params.merge(user: current_user))
-
-      if @booking.save
-        current_user.decrement!(:credits) unless current_user.owner?
-
-        BookingRefundJob.perform_later(@booking.id)
-        render json: @booking, status: :created
+      if Booking.start_time_available?(@room.id, booking_params[:start_time])
+        @booking = @room.bookings.build(booking_params.merge(user: current_user))
+  
+        if @booking.save
+          current_user.decrement!(:credits) unless current_user.owner?
+  
+          BookingRefundJob.perform_later(@booking.id)
+          render json: @booking, status: :created
+        else
+          render json: @booking.errors, status: :unprocessable_entity
+        end
       else
-        render json: @booking.errors, status: :unprocessable_entity
+        render json: { error: 'Este horário já está reservado' }, status: :unprocessable_entity
       end
     else
       render json: { error: 'Créditos insuficientes' }, status: :forbidden
@@ -31,7 +35,7 @@ class BookingsController < ApplicationController
     time_until_booking = @booking.start_time - Time.current
 
     if time_until_booking > 24.hours
-      current_user.increment!(:credits) unless current_user.owner??
+      current_user.increment!(:credits) unless current_user.owner?
       @booking.destroy
       message = 'Reserva cancelada com reembolso de crédito.'
     else
@@ -57,12 +61,13 @@ class BookingsController < ApplicationController
   private
 
   def set_room
-    @room = Room.find(params[:room_id])
+    room_id = params.dig(:booking, :room_id) || params[:room_id]
+    @room = Room.find(room_id)
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Sala não encontrada." }, status: :not_found
   end
 
   def booking_params
-    params.require(:booking).permit(:start_time, :end_time)
+    params.require(:booking).permit(:start_time, :end_time, :room_id)
   end
 end

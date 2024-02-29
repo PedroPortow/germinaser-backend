@@ -9,6 +9,6 @@ Rails.application.routes.draw do
   
   resources :rooms
   resources :clinics
-  resources :booking
+  resources :bookings
   post 'auth/login', to: 'auth#login'
 end
