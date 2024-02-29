@@ -21,6 +21,23 @@ class Booking < ApplicationRecord
   
     slots
   end
+
+  def self.weekly_available_slots(date, room_id)
+    start_of_week = date.beginning_of_week(:sunday)
+    end_of_week = start_of_week.end_of_week(:sunday)
+
+    weekly_slots = {}
+
+    (start_of_week.to_date..end_of_week.to_date).each do |day|
+      daily_slots = available_slots(day, room_id)
+      
+      formatted_slots = daily_slots.map { |slot| slot.strftime('%H:%M') }
+
+      weekly_slots[day] = formatted_slots
+    end
+
+    weekly_slots
+  end
   
 
   def self.is_available?(room_id, start_time)

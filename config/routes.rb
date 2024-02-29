@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   
   resources :rooms
   resources :clinics
-  resources :bookings
+  resources :bookings do
+    get 'weekly_slots', on: :collection
+  end
+
   post 'auth/login', to: 'auth#login'
 end

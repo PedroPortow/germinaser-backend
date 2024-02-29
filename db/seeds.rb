@@ -29,10 +29,19 @@ Room.create(name: "Sala 2", clinic_id: first_clinic)
 Room.create(name: "Sala 1", clinic_id: second_clinic)
 Room.create(name: "Sala 2", clinic_id: second_clinic)
 
-Booking.create(
-  room_id: 1, 
-  user_id: 2, 
-  start_time: Time.zone.now.beginning_of_day + 8.hours, 
-  end_time: Time.zone.now.beginning_of_day + 9.hours, 
-  status: 1
-)
+puts "Criando bookings...."
+Room.all.each do |room|
+  user = User.where(role: [admin_role, user_role]).sample
+  
+  (8..21).each do |hour|
+    Booking.create(
+      room_id: room.id,
+      user_id: user.id,
+      start_time: Time.zone.today.beginning_of_day + hour.hours,
+      end_time: Time.zone.today.beginning_of_day + (hour + 1).hours,
+      status: ['active', 'cancelled', 'refunded'].sample 
+    )
+  end
+end
+
+puts "bookings criados com sucesso."

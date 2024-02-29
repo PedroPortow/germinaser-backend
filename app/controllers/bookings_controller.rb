@@ -1,10 +1,17 @@
 class BookingsController < ApplicationController
   before_action :set_room, only: [:create]
+  before_action :set_booking, only: [:show, :update, :destroy] 
+  before_action :set_bookings, only: [:index] 
+
 
   # GET /bookings
   def index
-    @bookings = current_user.bookings
     render json: @bookings
+  end
+
+  # GET /bookings/:id
+  def show
+    render json: @booking
   end
 
   # POST /bookings
@@ -51,23 +58,50 @@ class BookingsController < ApplicationController
   end
 
   def available_slots
-    date = params[:date].to_date
+    date_param = params[:date].
     room_id = params[:room_id]
     available_slots = Booking.available_slots(date, room_id)
 
+    date = Date.parse(date_param)
+
     render json: available_slots.map { |slot| slot.strftime('%Y-%m-%d %H:%M:%S') }
   end
-
+  def weekly_slots
+    date_param = params.dig(:booking, :date)
+    room_id = params.dig(:booking, :room_id)
+  
+    if date_param.present?
+      date = Date.parse(date_param)
+      slots = Booking.weekly_available_slots(date, room_id)
+      render json: slots
+    else
+      render json: { error: "Data é necessária." }, status: :bad_request
+    end
+  rescue ArgumentError
+    render json: { error: "Formato de data inválido." }, status: :unprocessable_entity
+  end
+  
+  
   private
-
+  
   def set_room
-    room_id = params.dig(:booking, :room_id) || params[:room_id]
+    room_id = params.dig(:booking, :room_id)
     @room = Room.find(room_id)
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Sala não encontrada." }, status: :not_found
   end
 
+  def set_booking
+    @booking = Booking.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Reserva não encontrada." }, status: :not_found
+  end
+
+  def set_bookings
+    @bookings = current_user.bookings
+  end
+
   def booking_params
-    params.require(:booking).permit(:start_time, :room_id)
+    params.require(:booking).permit(:start_time, :room_id) 
   end
 end
