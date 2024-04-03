@@ -2,6 +2,8 @@ class BookingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_booking, only: [:show, :update, :destroy]
   # before_action :check_permission, only: [:create, :update, :destroy]
+  before_action :set_date, only: [:day_available_slots]
+  before_action :set_room, only: [:day_available_slots]
 
   def index
     @bookings = Booking.all
@@ -33,6 +35,13 @@ class BookingsController < ApplicationController
     end
   end
 
+  def day_available_slots
+    service = DayAvailableSlotsService.new(@room.id, @date)
+    available_slots = service.call
+
+    render json: { available_slots: available_slots }, status: :ok
+  end
+
   def destroy
     @booking.destroy
     head :no_content
@@ -42,6 +51,26 @@ class BookingsController < ApplicationController
 
   def set_booking
     @booking = Booking.find(params[:id])
+  end
+
+  def set_room
+    room_id = if params[:booking].present?
+                params.dig(:booking, :room_id)
+              else
+                params[:room_id]
+              end
+
+    @room = Room.find_by_id(room_id)
+
+    if @room.nil?
+      render json: { error: "Sala não encontrada." }, status: :not_found
+    end
+  end
+
+  def set_date
+    @date = Date.parse(params[:date])
+  rescue ArgumentError, TypeError
+    render json: { error: "Formato de data inválido ou data não fornecida." }, status: :unprocessable_entity
   end
 
   def booking_params

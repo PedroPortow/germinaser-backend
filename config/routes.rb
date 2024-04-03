@@ -14,7 +14,11 @@ Rails.application.routes.draw do
 
   resources :rooms
 
-  resources :bookings
+  resources :bookings do
+    collection do
+      get 'day_available_slots'
+    end
+  end
 
   resources :clinics do
     resources :rooms, only: [:index] #salas de uma clínica específica
