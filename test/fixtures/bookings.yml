@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  room: one
+  user: one
+  start_time: 2024-04-03 12:07:07
+  canceled_at: 2024-04-03 12:07:07
+
+two:
+  room: two
+  user: two
+  start_time: 2024-04-03 12:07:07
+  canceled_at: 2024-04-03 12:07:07
