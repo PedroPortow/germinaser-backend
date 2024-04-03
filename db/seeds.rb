@@ -12,3 +12,8 @@ User.create(email: "user@gmail.com", password: "123456", role: "user")
 
 Clinic.create(name: "Casa 1", address: "endereco legal")
 Clinic.create(name: "Casa 2", address: "endereco legal 2")
+
+Room.create(name: "Sala 1 - Clinica 1", clinic_id: 1)
+Room.create(name: "Sala 2 - Clinica 1", clinic_id: 1)
+Room.create(name: "Sala 1 - Clinica 2", clinic_id: 2)
+Room.create(name: "Sala 2 - Clinica 2", clinic_id: 2)
