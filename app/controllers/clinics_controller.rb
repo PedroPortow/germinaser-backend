@@ -6,19 +6,19 @@ class ClinicsController < ApplicationController
   # GET /clinics
   def index
     @clinics = Clinic.all
-    render json: @clinics
+    render json: ClinicSerializer.new(@clinics).serializable_hash, status: :ok
   end
 
   # GET /clinics/1
   def show
-    render json: @clinic
+    render json: ClinicSerializer.new(@clinic).serializable_hash, status: :ok
   end
 
   # POST /clinics
   def create
     @clinic = Clinic.new(clinic_params)
     if @clinic.save
-      render json: @clinic, status: :created, address: @clinic
+      render json: ClinicSerializer.new(@clinic).serializable_hash, status: :created
     else
       render json: @clinic.errors, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class ClinicsController < ApplicationController
   # PATCH/PUT /clinics/1
   def update
     if @clinic.update(clinic_params)
-      render json: @clinic
+      render json: ClinicSerializer.new(@clinic).serializable_hash, status: :ok
     else
       render json: @clinic.errors, status: :unprocessable_entity
     end
@@ -36,7 +36,7 @@ class ClinicsController < ApplicationController
   # DELETE /clinics/1
   def destroy
     @clinic.destroy
-    render json: { message: 'Clinic successfully deleted' }
+    render json: { message: 'Clinic successfully deleted' }, status: :ok
   end
 
   private
@@ -45,7 +45,7 @@ class ClinicsController < ApplicationController
     end
 
     def clinic_params
-      params.require(:clinic).permit(:name, :address)
+      params.require(:clinic).permit(:name, :location)
     end
 
     def check_owner
