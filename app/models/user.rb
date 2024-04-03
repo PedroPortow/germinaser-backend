@@ -7,9 +7,16 @@ class User < ApplicationRecord
 
   enum role: [:user, :admin, :owner]
   after_initialize :set_default_role, if: :new_record?
+  after_initialize :set_default_credits, if: :new_record?
+
+
+  private
 
   def set_default_role
     self.role ||= :user
   end
-        
+
+  def set_default_credits
+    self.credits ||= 0
+  end
 end
