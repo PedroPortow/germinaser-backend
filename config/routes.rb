@@ -10,7 +10,13 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  resources :clinics
+  resources :rooms
+
+  resources :clinics do
+    resources :rooms, only: [:index] #salas de uma clínica específica
+  end
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
