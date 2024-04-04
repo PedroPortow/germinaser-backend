@@ -1,4 +1,3 @@
-class RoomSerializer
-  include JSONAPI::Serializer
+class RoomSerializer  < ActiveModel::Serializer
   attributes :id, :clinic_id, :name
 end

@@ -6,19 +6,22 @@ class ClinicsController < ApplicationController
   # GET /clinics
   def index
     @clinics = Clinic.all
-    render json: ClinicSerializer.new(@clinics).serializable_hash, status: :ok
+    # AMS irá automaticamente usar o ClinicSerializer para cada clínica na coleção
+    render json: @clinics, status: :ok
   end
 
   # GET /clinics/1
   def show
-    render json: ClinicSerializer.new(@clinic).serializable_hash, status: :ok
+    # AMS irá automaticamente usar o ClinicSerializer para serializar @clinic
+    render json: @clinic, status: :ok
   end
 
   # POST /clinics
   def create
     @clinic = Clinic.new(clinic_params)
     if @clinic.save
-      render json: ClinicSerializer.new(@clinic).serializable_hash, status: :created
+      # Note que não é mais necessário chamar .serializable_hash manualmente
+      render json: @clinic, status: :created
     else
       render json: @clinic.errors, status: :unprocessable_entity
     end
@@ -27,7 +30,7 @@ class ClinicsController < ApplicationController
   # PATCH/PUT /clinics/1
   def update
     if @clinic.update(clinic_params)
-      render json: ClinicSerializer.new(@clinic).serializable_hash, status: :ok
+      render json: @clinic, status: :ok
     else
       render json: @clinic.errors, status: :unprocessable_entity
     end
@@ -45,10 +48,11 @@ class ClinicsController < ApplicationController
     end
 
     def clinic_params
-      params.require(:clinic).permit(:name, :location)
+      params.require(:clinic).permit(:name, :address) # Certifique-se de que :address é o correto aqui, não :location
     end
 
     def check_owner
-      render json: { error: 'Not authorized' }, status: :unauthorized unless current_user.owner?
+      # Garante que somente o proprietário possa criar, atualizar ou deletar
+      head :unauthorized unless current_user.owner?
     end
 end

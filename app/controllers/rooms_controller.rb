@@ -6,19 +6,18 @@ class RoomsController < ApplicationController
   # GET /rooms ou GET /clinics/:clinic_id/rooms
   def index
     @rooms = params[:clinic_id] ? Room.where(clinic_id: params[:clinic_id]) : Room.all
-    render json: RoomSerializer.new(@rooms).serializable_hash, status: :ok
+    render json: @rooms, status: :ok
   end
 
   # GET /rooms/1
   def show
-    render json: RoomSerializer.new(@room).serializable_hash, status: :ok
+    render json: @room, status: :ok
   end
-
   # POST /rooms
   def create
     @room = Room.new(room_params)
     if @room.save
-      render json: RoomSerializer.new(@room).serializable_hash, status: :created
+      render json: @room, status: :created
     else
       render json: @room.errors, status: :unprocessable_entity
     end
@@ -27,7 +26,7 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1
   def update
     if @room.update(room_params)
-      render json: RoomSerializer.new(@room).serializable_hash, status: :ok
+      render json: @room, status: :ok
     else
       render json: @room.errors, status: :unprocessable_entity
     end
@@ -38,7 +37,7 @@ class RoomsController < ApplicationController
     @room.destroy
     head :no_content
   end
-
+  
   private
     def set_room
       @room = Room.find(params[:id])
