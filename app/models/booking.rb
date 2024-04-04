@@ -3,6 +3,10 @@ class Booking < ApplicationRecord
   belongs_to :user
   before_create :consume_credit_if_needed
 
+  def clinic
+    room.clinic
+  end
+
   private 
 
   def consume_credit_if_needed

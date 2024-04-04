@@ -115,6 +115,18 @@ GEM
     jsonapi-renderer (0.2.2)
     jwt (2.8.1)
       base64
+    kaminari (1.2.2)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.2)
+      kaminari-activerecord (= 1.2.2)
+      kaminari-core (= 1.2.2)
+    kaminari-actionview (1.2.2)
+      actionview
+      kaminari-core (= 1.2.2)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -215,6 +227,7 @@ DEPENDENCIES
   debug
   devise
   devise-jwt
+  kaminari
   mysql2 (~> 0.5)
   puma (~> 5.0)
   rack-cors

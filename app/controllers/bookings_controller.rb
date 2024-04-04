@@ -5,9 +5,12 @@ class BookingsController < ApplicationController
   before_action :set_room, only: [:day_available_slots]
 
   def index
-    @bookings = Booking.all
-    render json: @bookings, status: :ok
+    @bookings = current_user.bookings.page(params[:page]).per(params[:per_page])
+    
+    render json: @bookings, meta: pagination_info(@bookings), adapter: :json, status: :ok
   end
+  
+
 
   def show
     render json: @booking, status: :ok
@@ -34,8 +37,6 @@ class BookingsController < ApplicationController
     start_date = Time.zone.now.beginning_of_day
     end_date = start_date + 7.days
     
-    byebug
-
     @bookings = current_user.bookings.where(start_time: start_date..end_date)
     render json: @bookings, status: :ok
   end
@@ -77,6 +78,16 @@ def day_available_slots
     @date = Date.parse(params[:date])
   rescue ArgumentError, TypeError
     render json: { error: "Formato de data inválido ou data não fornecida." }, status: :unprocessable_entity
+  end
+
+  def pagination_info(bookings)
+    {
+      current_page: bookings.current_page,
+      next_page: bookings.next_page,
+      prev_page: bookings.prev_page,
+      total_pages: bookings.total_pages,
+      total_count: bookings.total_count
+    }
   end
 
   def booking_params
