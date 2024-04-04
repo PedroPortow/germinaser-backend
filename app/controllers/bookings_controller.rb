@@ -33,6 +33,8 @@ class BookingsController < ApplicationController
   def upcoming
     start_date = Time.zone.now.beginning_of_day
     end_date = start_date + 7.days
+    
+    byebug
 
     @bookings = current_user.bookings.where(start_time: start_date..end_date)
     render json: @bookings, status: :ok
