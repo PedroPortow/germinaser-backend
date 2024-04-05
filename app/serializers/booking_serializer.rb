@@ -1,5 +1,13 @@
 class BookingSerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :clinic_name, :room_name, :start_time, :date
+  attributes :id, :user_id, :clinic_id, :room_id, :clinic_name, :room_name, :start_time, :date
+
+  def clinic_id
+    object.room.clinic.id
+  end
+
+  def room_id
+    object.room.id
+  end
 
   def clinic_name
     object.room.clinic.name
