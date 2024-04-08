@@ -48,7 +48,7 @@ class RoomsController < ApplicationController
     end
 
     def check_permission
-      unless current_user.owner? || current_user.admin?
+      unless current_user_admin_or_owner
         render json: { error: 'Not authorized' }, status: :unauthorized
       end
     end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'users/index'
   get '/current_user', to: 'current_user#index'
   get '/current_user/available_credits', to: 'current_user#available_credits'
 
@@ -20,6 +21,8 @@ Rails.application.routes.draw do
       get 'upcoming'
     end
   end
+
+  get '/users', to: 'users#index'
 
   resources :clinics do
     resources :rooms, only: [:index] #salas de uma clínica específica
