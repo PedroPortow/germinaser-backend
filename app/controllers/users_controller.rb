@@ -14,6 +14,7 @@ class UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
+
     if user.save
       render json: user, serializer: UserSerializer, status: :created
     else
@@ -51,6 +52,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :role)
+    params.require(:user).permit(:name, :credits, :email, :password, :role)
   end
 end
