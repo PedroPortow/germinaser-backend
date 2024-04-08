@@ -7,6 +7,10 @@ class UsersController < ApplicationController
     render json: users, each_serializer: UserSerializer
   end
 
+  def roles
+    render json: { roles: User.roles_keys }
+  end
+
   private
 
   def ensure_admin_user!

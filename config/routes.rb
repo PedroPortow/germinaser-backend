@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   end
 
   get '/users', to: 'users#index'
+  get '/user_roles', to: 'users#roles'
 
   resources :clinics do
     resources :rooms, only: [:index] #salas de uma clínica específica

@@ -11,6 +11,10 @@ class User < ApplicationRecord
   has_many :bookings
 
 
+  def self.roles_keys
+    roles.keys
+  end
+
   private
 
   def set_default_role
