@@ -40,7 +40,7 @@ class BookingsController < ApplicationController
   end
 
   
-def day_available_slots
+  def day_available_slots
     service = DayAvailableSlotsService.new(@room.id, @date)
     available_slots = service.call
 
