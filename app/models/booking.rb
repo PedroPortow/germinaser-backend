@@ -2,7 +2,7 @@ class Booking < ApplicationRecord
   belongs_to :room
   belongs_to :user
   before_create :consume_credit_if_needed
-  before_update :return_credits_on_cancel, if: :canceled_at_changed?
+  after_create :return_credits_if_pending
 
   validates :name, presence: true, uniqueness: { scope: :user_id, message: 'O nome da reserva deve ser único por usuário' }
   validates :room, presence: true
@@ -21,7 +21,26 @@ class Booking < ApplicationRecord
     room.clinic
   end
 
+  def cancel
+    raise "Não é possível cancelar reservas passadas ou já canceladas" if past_or_already_cancelled?
+    
+    Booking.transaction do
+      if (start_time - Time.zone.now) < 24.hours
+        self.credit_return_pending = true
+      else
+        user.increment!(:credits)
+      end
+      
+      self.canceled_at = Time.zone.now
+      save!
+    end
+  end
+
   private 
+
+  def past_or_already_cancelled?
+    start_time < Time.zone.now || canceled_at.present?
+  end
 
   def consume_credit_if_needed
     return if user.owner?
@@ -47,10 +66,11 @@ class Booking < ApplicationRecord
     end
   end
 
-  def return_credits_on_cancel
-    return unless canceled_at && start_time > Time.zone.now
-
-    if (start_time - Time.zone.now) > 24.hours # antecedencia dde 24  horas
-      user.increment!(:credits)
+  def return_credits_if_pending
+    previous_booking = Booking.find_by(room_id: room_id, start_time: start_time, credit_return_pending: true)
+    if previous_booking
+      previous_booking.user.increment!(:credits)
+      previous_booking.update!(credit_return_pending: false)
+    end
   end
 end

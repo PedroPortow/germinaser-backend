@@ -53,13 +53,11 @@ class BookingsController < ApplicationController
   end
 
   def cancel
-    if @booking.update(canceled_at: Time.zone.now)
-      render json: { message: "Reserva cancelada com sucesso." }, status: :ok
-    else
-      render json: @booking.errors, status: :unprocessable_entity
-    end
+    @booking.cancel
+    render json: { message: "Reserva cancelada com sucesso." }, status: :ok
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
-
   private
 
   def set_booking
