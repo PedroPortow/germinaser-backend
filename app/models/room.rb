@@ -3,5 +3,5 @@ class Room < ApplicationRecord
   has_many :bookings
 
   validates :clinic, presence: true, uniqueness: true
-  validates :address, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true
 end
