@@ -10,8 +10,6 @@ class BookingsController < ApplicationController
     render json: @bookings, meta: pagination_info(@bookings), adapter: :json, status: :ok
   end
   
-
-
   def show
     render json: @booking, status: :ok
   end
