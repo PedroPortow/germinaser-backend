@@ -1,6 +1,6 @@
 class BookingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_booking, only: [:show, :update, :destroy]
+  before_action :set_booking, only: [:show, :update, :destroy, :cancel]
   before_action :set_date, only: [:day_available_slots]
   before_action :set_room, only: [:day_available_slots]
 
@@ -52,6 +52,14 @@ class BookingsController < ApplicationController
     head :no_content
   end
 
+  def cancel
+    if @booking.update(canceled_at: Time.zone.now)
+      render json: { message: "Reserva cancelada com sucesso." }, status: :ok
+    else
+      render json: @booking.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_booking
@@ -89,6 +97,6 @@ class BookingsController < ApplicationController
   end
 
   def booking_params
-    params.require(:booking).permit(:room_id, :start_time, :canceled_at)
+    params.require(:booking).permit(:name, :room_id, :start_time, :canceled_at)
   end
 end

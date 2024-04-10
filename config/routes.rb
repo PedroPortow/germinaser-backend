@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     collection do
       get 'day_available_slots'
       get 'upcoming'
+      post 'cancel'
     end
   end
 

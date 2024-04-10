@@ -6,13 +6,11 @@ class ClinicsController < ApplicationController
   # GET /clinics
   def index
     @clinics = Clinic.all
-    # AMS irá automaticamente usar o ClinicSerializer para cada clínica na coleção
     render json: @clinics, status: :ok
   end
 
   # GET /clinics/1
   def show
-    # AMS irá automaticamente usar o ClinicSerializer para serializar @clinic
     render json: @clinic, status: :ok
   end
 
@@ -20,7 +18,6 @@ class ClinicsController < ApplicationController
   def create
     @clinic = Clinic.new(clinic_params)
     if @clinic.save
-      # Note que não é mais necessário chamar .serializable_hash manualmente
       render json: @clinic, status: :created
     else
       render json: @clinic.errors, status: :unprocessable_entity
@@ -48,11 +45,10 @@ class ClinicsController < ApplicationController
     end
 
     def clinic_params
-      params.require(:clinic).permit(:name, :address) # Certifique-se de que :address é o correto aqui, não :location
+      params.require(:clinic).permit(:name, :address) 
     end
 
     def check_owner
-      # Garante que somente o proprietário possa criar, atualizar ou deletar
       head :unauthorized unless current_user.owner?
     end
 end
