@@ -39,7 +39,7 @@ class BookingsController < ApplicationController
     render json: @bookings, status: :ok
   end
 
-  
+   
   def day_available_slots
     service = DayAvailableSlotsService.new(@room.id, @date)
     available_slots = service.call

@@ -36,4 +36,35 @@ RSpec.describe BookingsController, type: :controller do
       expect(json_response['id']).to eq(bookings.first.id)
     end
   end
+
+  describe  "POST #create" do
+    context 'with valid params' do
+      let(:valid_attributes) { { booking: { name: 'Nova Reserva teste', room_id: room.id, start_time: 3.days.from_now } } }
+      
+      it 'creates a new Booking' do
+        expect { post :create, params: valid_attributes }.to change(Booking, :count).by(1)
+      end
+  
+      it 'renders a JSON response with the new booking' do
+        post :create, params: valid_attributes
+        expect(response).to have_http_status(:created)
+        expect(response.content_type).to match(a_string_including('application/json'))
+      end
+    end
+
+    context "if has a booking at the same start time" do
+      let(:start_time) { "2025-04-15T14:00:00Z"  } # TODO: Arrumar isso aqui
+      let!(:existing_booking) { FactoryBot.create(:booking, user: user, room: room, start_time: start_time) }
+      let(:invalid_attributes) { { booking: { name: 'Teste reserva mesmo horário', room_id: room.id, start_time: start_time } } }
+  
+      it 'doesnt create a new booking due to time conflict' do
+        expect { post :create, params: invalid_attributes }.not_to change(Booking, :count)
+      end
+  
+      it 'renders a JSON response with errors' do
+        post :create, params: invalid_attributes
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
 end
