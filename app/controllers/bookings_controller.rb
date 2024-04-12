@@ -47,10 +47,10 @@ class BookingsController < ApplicationController
     render json: { available_slots: available_slots }, status: :ok
   end
 
-  def destroy
-    @booking.destroy
-    head :no_content
-  end
+  # def destroy
+  #   @booking.destroy
+  #   head :no_content
+  # end
 
   def cancel
     @booking.cancel
@@ -58,6 +58,7 @@ class BookingsController < ApplicationController
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
+  
   private
 
   def set_booking
