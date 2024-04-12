@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :room do
-    name { "Sala #{Faker::Alphanumeric.alpha(number: 2)}" }
+    sequence(:name) { |n| "Room #{n}" } 
     clinic  { create(:clinic) }
   end
 end
