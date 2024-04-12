@@ -8,7 +8,7 @@ class User < ApplicationRecord
   enum role: [:user, :admin, :owner]
   after_initialize :set_default_role, if: :new_record?
   after_initialize :set_default_credits, if: :new_record?
-  has_many :bookings
+  has_many :bookings, dependent: :destroy
 
 
   def self.roles_keys
