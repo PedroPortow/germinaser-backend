@@ -27,3 +27,15 @@ Booking.create(name: "Reserva Pedro", room: room3, user: user, start_time: 5.day
 Booking.create(name: "Reserva Pedro", room: room4, user: user, start_time: 6.day.since(Time.zone.now))
 Booking.create(name: "Reserva Pedro", room: room2, user: user, start_time: 7.day.since(Time.zone.now))
 Booking.create(name: "Reserva Pedro", room: room2, user: user, start_time: 8.day.since(Time.zone.now))
+
+
+
+Booking.create(name: "Reserva Pedro", room: room1, user: owner, start_time: Time.zone.now)
+Booking.create(name: "Reserva Pedro2", room: room1, user: owner, start_time: 1.day.since(Time.zone.now))
+Booking.create(name: "Reserva Pedro3", room: room1, user: owner, start_time: 2.day.since(Time.zone.now))
+Booking.create(name: "Reserva Pedro4", room: room2, user: owner, start_time: 3.day.since(Time.zone.now))
+Booking.create(name: "Reserva Pedro5", room: room2, user: owner, start_time: 4.day.since(Time.zone.now))
+Booking.create(name: "Reserva Pedro6", room: room3, user: owner, start_time: 5.day.since(Time.zone.now))
+Booking.create(name: "Reserva Pedro7", room: room4, user: owner, start_time: 6.day.since(Time.zone.now))
+Booking.create(name: "Reserva Pedro8", room: room2, user: owner, start_time: 7.day.since(Time.zone.now))
+Booking.create(name: "Reserva Pedro9", room: room2, user: owner, start_time: 8.day.since(Time.zone.now))
