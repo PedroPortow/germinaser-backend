@@ -1,5 +1,5 @@
 class BookingSerializer < ActiveModel::Serializer
-  attributes :id, :name, :user_id, :clinic_id, :room_id, :clinic_name, :room_name, :start_time, :date
+  attributes :id, :name, :user_id, :clinic_id, :room_id, :clinic_name, :room_name, :start_time, :date, :status
 
   def clinic_id
     object.room.clinic.id
@@ -23,5 +23,15 @@ class BookingSerializer < ActiveModel::Serializer
 
   def start_time
     object.start_time.strftime("%H:%M")
+  end
+
+  def status
+    if object.canceled_at.present?
+      'canceled'
+    elsif object.start_time.future?
+      'upcoming'
+    else
+      'done'
+    end
   end
 end

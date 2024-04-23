@@ -2,7 +2,7 @@ class Admin::BookingsController < ApplicationController
   before_action :authenticate_user!
   before_action :check_admin
   before_action :filter_bookings, only: [:index]
-  before_action :set_booking, only: [:show, :update]
+  before_action :set_booking, only: [:show, :update, :cancel]
 
   def index
     @bookings = @bookings.page(params[:page]).per(params[:per_page])
@@ -21,11 +21,20 @@ class Admin::BookingsController < ApplicationController
     end
   end
 
+  def cancel
+    @booking.cancel
+    render json: { message: "Reserva cancelada com sucesso." }, status: :ok
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+
   private
 
   def filter_bookings
     @bookings = Booking.all
     @bookings = @bookings.by_user(params[:user_id]) if params[:user_id].present?
+    @bookings = @bookings.by_clinic(params[:clinic_id]) if params[:clinic_id].present?
     @bookings = @bookings.by_clinic(params[:clinic_id]) if params[:clinic_id].present?
   end
 

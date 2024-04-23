@@ -14,7 +14,11 @@ Rails.application.routes.draw do
   }
 
   namespace :admin do
-    resources :bookings
+    resources :bookings, only: [:index, :show, :update] do
+      member do
+        post 'cancel'  
+      end
+    end
   end
 
   resources :rooms
