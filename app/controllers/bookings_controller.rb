@@ -4,9 +4,18 @@ class BookingsController < ApplicationController
   before_action :set_date, only: [:day_available_slots]
   before_action :set_room, only: [:day_available_slots]
 
+  # TODO: Fix this bullshit ass code
   def index
-    @bookings = current_user.bookings.page(params[:page]).per(params[:per_page])
-    
+    @bookings = current_user.bookings
+
+    if params[:with_canceled] == 'true'
+      @bookings = @bookings.where.not(canceled_at: nil)
+    else
+      @bookings = @bookings.where(canceled_at: nil)
+    end
+
+    @bookings = @bookings.page(params[:page]).per(params[:per_page])
+
     render json: @bookings, meta: pagination_info(@bookings), adapter: :json, status: :ok
   end
   
@@ -57,6 +66,8 @@ class BookingsController < ApplicationController
     render json: { message: "Reserva cancelada com sucesso." }, status: :ok
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
+
+    byebug
   end
   
   private
