@@ -9,6 +9,12 @@ class DayAvailableSlotsService
     end_period = @date.beginning_of_day + 21.hours
     slots = (start_period.to_i..end_period.to_i).step(1.hour).map { |t| Time.zone.at(t) }
 
+    current_time = Time.zone.now
+
+    if @date.today?
+      slots = slots.select { |slot| slot > current_time }
+    end
+
     existing_bookings = Booking.where(room_id: @room.id, start_time: start_period...end_period)
 
     slots.reject! do |slot|
