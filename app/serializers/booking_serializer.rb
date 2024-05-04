@@ -26,12 +26,6 @@ class BookingSerializer < ActiveModel::Serializer
   end
 
   def status
-    if object.canceled_at.present?
-      'canceled'
-    elsif object.start_time.future?
-      'upcoming'
-    else
-      'done'
-    end
+    object.status
   end
 end

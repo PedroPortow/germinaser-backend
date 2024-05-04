@@ -21,8 +21,56 @@ class Booking < ApplicationRecord
   scope :by_clinic, -> (clinic_id) {
     joins(room: :clinic).where(clinics: { id: clinic_id }) if clinic_id.present?
   }
+  scope :by_room, -> (room_id) {
+    where(room_id: room_id) if room_id.present?
+  }
 
   attr_accessor :skip_room_time_validation
+
+  def self.filter_bookings(user, filters)
+    bookings = user.bookings
+
+    case filters[:status]
+    when 'canceled'
+      bookings = bookings.canceled
+    when 'scheduled'
+      bookings = bookings.where('start_time > ?', Time.zone.now).where(canceled_at: nil)
+    when 'completed'
+      bookings = bookings.where('start_time < ?', Time.zone.now).where(canceled_at: nil)
+    end
+
+    bookings = bookings.by_room(filters[:room_id]) if filters[:room_id].present? && filters[:room_id] != 'all'
+
+    bookings = bookings.by_clinic(filters[:clinic_id]) if filters[:clinic_id].present? && filters[:clinic_id] != 'all'
+
+    bookings
+  end
+
+  def self.admin_filter_bookings(filters)
+    bookings = self.all
+    bookings = bookings.by_user(filters[:user_id]) if filters[:user_id].present? && filters[:user_id] != 'all'
+
+    case filters[:status]
+    when 'canceled'
+      bookings = bookings.canceled
+    when 'scheduled'
+      bookings = bookings.where('start_time > ?', Time.zone.now).where(canceled_at: nil)
+    when 'completed'
+      bookings = bookings.where('start_time < ?', Time.zone.now).where(canceled_at: nil)
+    end
+
+    bookings = bookings.by_room(filters[:room_id]) if filters[:room_id].present? && filters[:room_id] != 'all'
+
+    bookings = bookings.by_clinic(filters[:clinic_id]) if filters[:clinic_id].present? && filters[:clinic_id] != 'all'
+
+    bookings
+  end
+
+  def status
+    return 'canceled' if canceled_at.present?
+    return 'completed' if start_time < Time.zone.now
+    'scheduled'
+  end
 
   def clinic
     room.clinic

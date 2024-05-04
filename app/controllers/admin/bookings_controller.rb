@@ -32,10 +32,14 @@ class Admin::BookingsController < ApplicationController
   private
 
   def filter_bookings
-    @bookings = Booking.all
-    @bookings = @bookings.by_user(params[:user_id]) if params[:user_id].present?
-    @bookings = @bookings.by_clinic(params[:clinic_id]) if params[:clinic_id].present?
-    @bookings = @bookings.by_clinic(params[:clinic_id]) if params[:clinic_id].present?
+    filters = {
+      status: params[:status],
+      room_id: params[:room_id],
+      clinic_id: params[:clinic_id],
+      user_id: params[:user_id]
+    }
+
+    @bookings = Booking.admin_filter_bookings(filters)
   end
 
   def set_booking

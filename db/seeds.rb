@@ -8,6 +8,7 @@
 
 owner = User.create(email: "owner@gmail.com", password: "123456", role: "owner", credits: 50, name: "Pedro Porto")
 admin = User.create(email: "admin@gmail.com", password: "123456", role: "admin", credits: 50, name: "Maurício Farias")
+admin = User.create(email: "admin@gmail.com", password: "123456", role: "admin", credits: 50, name: "Marcio")
 user = User.create(email: "user@gmail.com", password: "123456", role: "user", credits: 50, name:"Deisi Moura Rodrigues")
 
 clinic1 = Clinic.create(name: "Casa 1", address: "endereco legal")
@@ -20,12 +21,10 @@ room4 = Room.create(name: "Sala 3", clinic: clinic2)
 
 start_date = Time.zone.tomorrow
 
+Booking.create(name: "Reserva ANTIGA (criado com data anterior)", room: room1, user: owner, start_time: start_date - 1.day)
+
 Booking.create(name: "Reserva Pedro", room: room1, user: owner, start_time: start_date)
-Booking.create(name: "Reserva Pedro", room: room1, user: owner, start_time: start_date + 1.day)
-Booking.create(name: "Reserva Pedro", room: room1, user: owner, start_time: start_date + 2.days)
-Booking.create(name: "Reserva Pedro", room: room2, user: owner, start_time: start_date + 3.days)
-Booking.create(name: "Reserva Pedro", room: room2, user: owner, start_time: start_date + 4.days)
-Booking.create(name: "Reserva Pedro", room: room3, user: owner, start_time: start_date + 5.days)
-Booking.create(name: "Reserva Pedro", room: room4, user: owner, start_time: start_date + 6.days)
-Booking.create(name: "Reserva Pedro", room: room2, user: owner, start_time: start_date + 7.days)
-Booking.create(name: "Reserva Pedro", room: room2, user: owner, start_time: start_date + 8.days)
+Booking.create(name: "Reserva teste 2", room: room2, user: owner, start_time: start_date + 1.day)
+Booking.create(name: "Reserva teste 3", room: room3, user: owner, start_time: start_date + 2.day)
+Booking.create(name: "Reserva teste 4", room: room1, user: owner, start_time: start_date + 3.day)
+Booking.create(name: "Reserva teste 5", room: room2, user: owner, start_time: start_date + 5.day)

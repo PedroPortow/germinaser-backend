@@ -1,24 +1,15 @@
 class BookingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_booking, only: [:show, :update, :destroy, :cancel]
+  before_action :filter_bookings, only: [:index]
   before_action :set_date, only: [:day_available_slots]
   before_action :set_room, only: [:day_available_slots]
 
-  # TODO: Fix this bullshit ass code
   def index
-    @bookings = current_user.bookings
-
-    if params[:with_canceled] == 'true'
-      @bookings = @bookings.where.not(canceled_at: nil)
-    else
-      @bookings = @bookings.where(canceled_at: nil)
-    end
-
     @bookings = @bookings.page(params[:page]).per(params[:per_page])
-
     render json: @bookings, meta: pagination_info(@bookings), adapter: :json, status: :ok
   end
-  
+
   def show
     render json: @booking, status: :ok
   end
@@ -43,12 +34,12 @@ class BookingsController < ApplicationController
   def upcoming
     start_date = Time.zone.now.beginning_of_day
     end_date = start_date + 7.days
-    
+
     @bookings = current_user.bookings.where(start_time: start_date..end_date)
     render json: @bookings, status: :ok
   end
 
-   
+
   def day_available_slots
     service = DayAvailableSlotsService.new(@room.id, @date)
     available_slots = service.call
@@ -56,24 +47,22 @@ class BookingsController < ApplicationController
     render json: { available_slots: available_slots }, status: :ok
   end
 
-  # def destroy
-  #   @booking.destroy
-  #   head :no_content
-  # end
-
   def cancel
     @booking.cancel
     render json: { message: "Reserva cancelada com sucesso." }, status: :ok
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
-
-    byebug
   end
-  
+
   private
 
   def set_booking
     @booking = Booking.find(params[:id])
+  end
+
+  def filter_bookings
+    filters = { status: params[:status], room_id: params[:room_id], clinic_id: params[:clinic_id] }
+    @bookings = Booking.filter_bookings(current_user, filters)
   end
 
   def set_room
