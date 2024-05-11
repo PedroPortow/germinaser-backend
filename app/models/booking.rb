@@ -81,10 +81,12 @@ class Booking < ApplicationRecord
     raise "Não é possível cancelar reservas passadas ou já canceladas" if past_or_already_cancelled?
 
     Booking.transaction do
-      if (start_time - Time.zone.now) < 24.hours
-        self.credit_return_pending = true
-      else
+      end_of_today = Time.zone.now.end_of_day
+
+      if start_time > end_of_today
         user.increment!(:credits)
+      else
+        self.credit_return_pending = true
       end
 
       self.canceled_at = Time.zone.now
@@ -117,8 +119,8 @@ class Booking < ApplicationRecord
   end
 
   def start_time_must_be_in_the_future
-    if start_time.present? && start_time < Time.zone.now
-      errors.add(:start_time, "deve ser maior que o horário atual")
+    if start_time < Time.now
+      errors.add('errors')
     end
   end
 
