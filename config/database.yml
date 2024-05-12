@@ -19,4 +19,5 @@ test:
   host: localhost
 
 production:
+  <<: *default
   url: <%= ENV['DATABASE_URL'] %>
