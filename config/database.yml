@@ -52,4 +52,5 @@ production:
   <<: *default
   database: germina_production
   username: germina
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
   password: <%= ENV["GERMINA_DATABASE_PASSWORD"] %>
