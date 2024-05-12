@@ -85,7 +85,7 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    devise (4.9.3)
+    devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0)
@@ -115,11 +115,11 @@ GEM
       i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    i18n (1.14.4)
+    i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
-    irb (1.12.0)
-      rdoc
+    irb (1.13.1)
+      rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jsonapi-renderer (0.2.2)
     jwt (2.8.1)
@@ -145,12 +145,12 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    method_source (1.0.0)
+    method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.22.3)
     msgpack (1.7.2)
     mysql2 (0.5.6)
-    net-imap (0.4.10)
+    net-imap (0.4.11)
       date
       net-protocol
     net-pop (0.1.2)
@@ -159,8 +159,8 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    nio4r (2.7.1)
-    nokogiri (1.16.3-x86_64-darwin)
+    nio4r (2.7.3)
+    nokogiri (1.16.4-x86_64-darwin)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     psych (5.1.2)
@@ -205,10 +205,10 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0)
       zeitwerk (~> 2.5)
-    rake (13.2.0)
+    rake (13.2.1)
     rdoc (6.6.3.1)
       psych (>= 4.0.0)
-    reline (0.5.0)
+    reline (0.5.6)
       io-console (~> 0.5)
     responders (3.1.1)
       actionpack (>= 5.2)
@@ -218,7 +218,7 @@ GEM
     rspec-expectations (3.13.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.0)
+    rspec-mocks (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-rails (5.0.3)
@@ -255,6 +255,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-22
+  x86_64-darwin-23
 
 DEPENDENCIES
   active_model_serializers
@@ -276,7 +277,7 @@ DEPENDENCIES
   tzinfo-data
 
 RUBY VERSION
-   ruby 3.0.0p0
+   ruby 3.3.1p55
 
 BUNDLED WITH
-   2.2.3
+   2.5.9
