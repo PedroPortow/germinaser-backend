@@ -6,8 +6,8 @@ class Booking < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :user_id, message: 'O nome da reserva deve ser unico' }
   validates :room, presence: true
-  validates :start_time, presence: true
   validates :user, presence: true
+  validates :start_time, presence: true
 
   validate :unique_active_booking_per_room_and_time, on: [:create, :update], unless: -> { skip_room_time_validation }
 
@@ -38,6 +38,8 @@ class Booking < ApplicationRecord
       when 'completed'
         bookings = bookings.canceled
     end
+
+    byebug
 
     bookings = bookings.by_room(filters[:room_id]) if filters[:room_id].present? && filters[:room_id] != 'all'
     bookings = bookings.by_clinic(filters[:clinic_id]) if filters[:clinic_id].present? && filters[:clinic_id] != 'all'
@@ -118,9 +120,10 @@ class Booking < ApplicationRecord
   end
 
   def start_time_must_be_in_the_future
-
     byebug
-    errors.add(:errors, 'Data e horário da reserva deve ser nos futuro' ) if start_time.after? Time.now
+    if start_time.before?(Time.zone.now)
+      errors.add(:start_time, 'Data e horário da reserva deve ser no futuro')
+    end
   end
 
   def return_credits_if_pending
