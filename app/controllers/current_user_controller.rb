@@ -10,7 +10,7 @@ class CurrentUserController < ApplicationController
   end
 
   def active_bookings_count
-    active_count = current_user.bookings.active.count
+    active_count = current_user.bookings.scheduled.count
     render json: { active_bookings_count: active_count }
   end
 end

@@ -4,7 +4,7 @@ class Booking < ApplicationRecord
   before_create :consume_credit_if_needed
   after_create :return_credits_if_pending
 
-  validates :name, presence: true, uniqueness: { scope: :user_id, message: 'O nome da reserva deve ser único por usuário' }
+  validates :name, presence: true, uniqueness: { scope: :user_id, message: 'O nome da reserva deve ser unico' }
   validates :room, presence: true
   validates :start_time, presence: true
   validates :user, presence: true
@@ -13,8 +13,8 @@ class Booking < ApplicationRecord
 
   validate :start_time_must_be_in_the_future
 
-  scope :active, -> { where('start_time > ? AND canceled_at IS NULL', Time.zone.now) }
-  scope :done, -> { where('start_time < ? AND canceled_at IS NULL', Time.zone.now) }
+  scope :scheduled, -> { where('start_time > ? AND canceled_at IS NULL', Time.zone.now) }
+  scope :completed, -> { where('start_time < ? AND canceled_at IS NULL', Time.zone.now) }
   scope :canceled, -> { where.not(canceled_at: nil) }
 
   scope :by_user, -> (user_id) { where(user_id: user_id) if user_id.present? }
@@ -31,16 +31,15 @@ class Booking < ApplicationRecord
     bookings = user.bookings
 
     case filters[:status]
-    when 'canceled'
-      bookings = bookings.canceled
-    when 'scheduled'
-      bookings = bookings.where('start_time > ?', Time.zone.now).where(canceled_at: nil)
-    when 'completed'
-      bookings = bookings.where('start_time < ?', Time.zone.now).where(canceled_at: nil)
+      when 'canceled'
+        bookings = bookings.canceled
+      when 'scheduled'
+        bookings = bookings.scheduled
+      when 'completed'
+        bookings = bookings.canceled
     end
 
     bookings = bookings.by_room(filters[:room_id]) if filters[:room_id].present? && filters[:room_id] != 'all'
-
     bookings = bookings.by_clinic(filters[:clinic_id]) if filters[:clinic_id].present? && filters[:clinic_id] != 'all'
 
     bookings
@@ -97,7 +96,7 @@ class Booking < ApplicationRecord
   private
 
   def past_or_already_cancelled?
-    start_time < Time.zone.now || canceled_at.present?
+    start_time.before? Time.now || canceled_at.present?
   end
 
   # TODO: Passar pra um concern
@@ -119,9 +118,9 @@ class Booking < ApplicationRecord
   end
 
   def start_time_must_be_in_the_future
-    if start_time < Time.now
-      errors.add('errors')
-    end
+
+    byebug
+    errors.add(:errors, 'Data e horário da reserva deve ser nos futuro' ) if start_time.after? Time.now
   end
 
   def return_credits_if_pending

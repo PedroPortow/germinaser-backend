@@ -4,11 +4,11 @@ class UserSerializer < ActiveModel::Serializer
              :canceled_bookings_count, :total_bookings_count
 
   def active_bookings_count
-    object.bookings.active.count
+    object.bookings.scheduled.count
   end
 
   def done_bookings_count
-    object.bookings.done.count
+    object.bookings.completed.count
   end
 
   def canceled_bookings_count

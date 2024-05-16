@@ -16,6 +16,7 @@ class BookingsController < ApplicationController
 
   def create
     @booking = current_user.bookings.build(booking_params)
+
     if @booking.save
       render json: @booking, status: :created
     else

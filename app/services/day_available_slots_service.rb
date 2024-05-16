@@ -20,8 +20,25 @@ class DayAvailableSlotsService
 
     existing_bookings = Booking.where(room_id: @room.id, start_time: start_period...end_period)
 
+    existing_fixed_bookings = FixedBooking.where(room_id: @room.id, day_of_week: @date.wday)
+
     slots.reject! do |slot|
-      existing_bookings.any? { |booking| booking.start_time.in_time_zone('Brasilia').strftime('%H:%M') == slot.strftime('%H:%M') && booking.canceled_at.nil? }
+      slot_time = slot.strftime('%H:%M')
+
+      existing_bookings.any? do |booking|
+        booking_time = booking.start_time.in_time_zone('UTC').strftime('%H:%M')
+
+
+        booking_time == slot_time && booking.canceled_at.nil?
+      end
+
+
+      existing_fixed_bookings.any? do |fixed_booking|
+        fixed_start_time = fixed_booking.start_time.in_time_zone('UTC').strftime('%H:%M')
+        fixed_end_time = fixed_booking.end_time.in_time_zone('UTC').strftime('%H:%M')
+
+        (fixed_start_time <= slot_time && slot_time < fixed_end_time) && fixed_booking.canceled_at.nil?
+      end
     end
 
     formatted_slots = slots.map { |slot| slot.strftime('%H:%M') }

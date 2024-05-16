@@ -16,12 +16,19 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :bookings, only: [:index, :show, :update] do
       member do
-        post 'cancel'  
+        post 'cancel'
       end
     end
   end
 
+
   resources :rooms
+
+  resources :fixed_bookings do
+    member do
+      post 'cancel'
+    end
+  end
 
   resources :bookings do
     collection do
@@ -29,7 +36,7 @@ Rails.application.routes.draw do
       get 'upcoming'
     end
     member do
-      post 'cancel' 
+      post 'cancel'
     end
   end
 
