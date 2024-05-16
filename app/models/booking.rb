@@ -39,8 +39,6 @@ class Booking < ApplicationRecord
         bookings = bookings.canceled
     end
 
-    byebug
-
     bookings = bookings.by_room(filters[:room_id]) if filters[:room_id].present? && filters[:room_id] != 'all'
     bookings = bookings.by_clinic(filters[:clinic_id]) if filters[:clinic_id].present? && filters[:clinic_id] != 'all'
 
@@ -120,7 +118,6 @@ class Booking < ApplicationRecord
   end
 
   def start_time_must_be_in_the_future
-    byebug
     if start_time.before?(Time.zone.now)
       errors.add(:start_time, 'Data e horário da reserva deve ser no futuro')
     end
