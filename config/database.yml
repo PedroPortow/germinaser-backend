@@ -20,4 +20,7 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV['JAWSDB_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  database: germina_production
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
