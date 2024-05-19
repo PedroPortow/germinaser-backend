@@ -1,7 +1,7 @@
 databases:
   - name: germinadb
     databaseName: germinadb
-    user: postgres
+    user: porto
     plan: free
 
 services:
