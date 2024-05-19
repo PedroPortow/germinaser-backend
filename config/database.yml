@@ -1,26 +1,19 @@
 default: &default
-  adapter: mysql2
-  encoding: utf8mb4
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  host: <%= ENV['DATABASE_HOST'] %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
 
 development:
   <<: *default
-  database: germina_development
-  username: root
-  password: '123456'
-  host: localhost
+  database: germina_dev
 
 test:
   <<: *default
   database: germina_test
-  username: root
-  password: '123456'
-  host: localhost
 
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
   database: germina_production
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
