@@ -55,11 +55,13 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'rails-controller-testing'
+  gem 'dotenv-rails'
   gem 'simplecov', require: false
 end
 
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  gem 'dotenv-rails'
   # gem "spring"
 end
 

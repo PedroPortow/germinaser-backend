@@ -2,15 +2,15 @@ databases:
   - name: germinadb
     databaseName: germinadb
     user: porto
-    plan: free
+    plan: starter
 
 services:
   - type: web
     name: germina
     runtime: ruby
-    plan: free
+    plan: starter
     buildCommand: "./bin/render-build.sh"
-    # preDeployCommand: "bundle exec rails db:migrate" # preDeployCommand only available on paid instance types
+    preDeployCommand: "bundle exec rails db:migrate" # preDeployCommand only available on paid instance types
     startCommand: "bundle exec rails server"
     envVars:
       - key: DATABASE_URL
