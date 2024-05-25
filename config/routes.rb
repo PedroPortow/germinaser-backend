@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     collection do
       get 'day_available_slots'
       get 'week_available_slots'
+      get 'rooms_available_slots'
       get 'upcoming'
     end
     member do

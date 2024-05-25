@@ -2,9 +2,9 @@ class BookingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_booking, only: [:show, :update, :destroy, :cancel]
   before_action :filter_bookings, only: [:index]
-  before_action :set_date, only: [:day_available_slots, :week_available_slots]
+  before_action :set_date, only: [:day_available_slots, :week_available_slots, :rooms_available_slots]
   before_action :set_room, only: [:day_available_slots]
-  before_action :set_clinic, only: [:week_available_slots]
+  before_action :set_clinic, only: [:week_available_slots, :rooms_available_slots]
 
   def index
     @bookings = @bookings.page(params[:page]).per(params[:per_page])
@@ -46,6 +46,19 @@ class BookingsController < ApplicationController
     available_slots = service.call
 
     render json: { available_slots: available_slots }, status: :ok
+  end
+
+  def rooms_available_slots
+    rooms_available_slots = []
+
+    Room.where(clinic_id: @clinic.id).each do |room|
+      service = DayAvailableSlotsService.new(room.id, @date)
+      slots = service.call
+
+      rooms_available_slots << { room: room, availableTimeSlots: slots }
+    end
+
+    render json: rooms_available_slots, status: :ok
   end
 
   def week_available_slots
