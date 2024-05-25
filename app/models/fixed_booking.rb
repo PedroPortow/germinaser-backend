@@ -2,7 +2,7 @@ class FixedBooking < ApplicationRecord
   belongs_to :room
   belongs_to :user
 
-  validates :name, presence: true, uniqueness: { scope: :user_id, message: 'O nome da reserva deve ser unico' }
+  validates :name, presence: true
   validates :room, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true

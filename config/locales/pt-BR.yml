@@ -1,0 +1,17 @@
+pt-BR:
+  activerecord:
+    models:
+      booking: "Reserva"
+    attributes:
+      booking:
+        name: "Nome"
+        room: "Sala"
+        user: "Usuário"
+        start_time: "Horário de Início"
+    errors:
+      messages:
+        taken: "já está em uso"
+        blank: "não pode ficar em branco"
+        invalid: "é inválido"
+      full_messages:
+        format: "%{attribute} %{message}"

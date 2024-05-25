@@ -4,10 +4,10 @@ class Booking < ApplicationRecord
   before_create :consume_credit_if_needed
   after_create :return_credits_if_pending
 
-  validates :name, presence: true, uniqueness: { scope: :user_id, message: 'O nome da reserva deve ser unico' }
-  validates :room, presence: true
-  validates :user, presence: true
-  validates :start_time, presence: true
+  validates :name, presence: { message: 'não pode ficar em branco' }, uniqueness: { scope: :user_id, message: 'já está em uso' }
+  validates :room, presence: { message: 'não pode ficar em branco' }
+  validates :user, presence: { message: 'não pode ficar em branco' }
+  validates :start_time, presence: { message: 'não pode ficar em branco' }
 
   validate :unique_active_booking_per_room_and_time, on: [:create, :update], unless: -> { skip_room_time_validation }
 

@@ -2,8 +2,9 @@ class BookingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_booking, only: [:show, :update, :destroy, :cancel]
   before_action :filter_bookings, only: [:index]
-  before_action :set_date, only: [:day_available_slots]
+  before_action :set_date, only: [:day_available_slots, :week_available_slots]
   before_action :set_room, only: [:day_available_slots]
+  before_action :set_clinic, only: [:week_available_slots]
 
   def index
     @bookings = @bookings.page(params[:page]).per(params[:per_page])
@@ -20,7 +21,7 @@ class BookingsController < ApplicationController
     if @booking.save
       render json: @booking, status: :created
     else
-      render json: @booking.errors, status: :unprocessable_entity
+        render json: { errors: @booking.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -28,7 +29,7 @@ class BookingsController < ApplicationController
     if @booking.update(booking_params)
       render json: @booking, status: :ok
     else
-      render json: @booking.errors, status: :unprocessable_entity
+        render json: { errors: @booking.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -45,6 +46,23 @@ class BookingsController < ApplicationController
     available_slots = service.call
 
     render json: { available_slots: available_slots }, status: :ok
+  end
+
+  def week_available_slots
+    start_date = @date.beginning_of_week
+    end_date = @date.end_of_week
+
+    available_slots = {}
+    Room.where(clinic_id: @clinic.id).each do |room|
+      (start_date..end_date).each do |date|
+        service = DayAvailableSlotsService.new(room.id, date)
+        slots = service.call
+        available_slots[date.to_s] ||= []
+        available_slots[date.to_s] << { name: room.name, availableTimeSlots: slots }
+      end
+    end
+
+    render json: available_slots, status: :ok
   end
 
   def cancel
@@ -83,6 +101,15 @@ class BookingsController < ApplicationController
     @date = Date.parse(params[:date])
   rescue ArgumentError, TypeError
     render json: { error: "Formato de data inválido ou data não fornecida." }, status: :unprocessable_entity
+  end
+
+  def set_clinic
+    clinic_id = params[:clinic_id]
+    @clinic = Clinic.find_by_id(clinic_id)
+
+    if @clinic.nil?
+      render json: { error: "Clinica não encontrada." }, status: :not_found
+    end
   end
 
   def pagination_info(bookings)
