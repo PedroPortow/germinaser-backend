@@ -1,22 +1,25 @@
 class DayAvailableSlotsService
   def initialize(room_id, date)
     @room = Room.find(room_id)
-    @day = date
+    @date = date.in_time_zone('Brasilia')
   end
 
   def call
-    start_period = @day.beginning_of_day + 8.hours
-    end_period = @day.beginning_of_day + 21.hours
+    Time.zone = 'Brasilia'
+
+    start_period = @date.beginning_of_day + 8.hours
+    end_period = @date.beginning_of_day + 21.hours
 
     slots = (start_period.to_i..end_period.to_i).step(1.hour).map { |t| Time.zone.at(t) }
 
-    if @day.today?
-      now = Time.zone.now.in_time_zone('Brasilia').strftime('%H:%M')
-      slots = slots.select { |slot| slot.strftime('%H:%M') > now }
+    current_time = Time.zone.now
+
+    if @date.today?
+      slots = slots.select { |slot| slot > current_time }
     end
 
     existing_bookings = Booking.where(room_id: @room.id, start_time: start_period...end_period)
-    existing_fixed_bookings = FixedBooking.where(room_id: @room.id, day_of_week: @day.wday)
+    existing_fixed_bookings = FixedBooking.where(room_id: @room.id, day_of_week: @date.wday)
 
     slots.reject! do |slot|
       slot_time = slot.strftime('%H:%M')
@@ -35,7 +38,6 @@ class DayAvailableSlotsService
 
       existing_booking_conflict || existing_fixed_booking_conflict
     end
-
 
     formatted_slots = slots.map { |slot| slot.strftime('%H:%M') }
     formatted_slots
