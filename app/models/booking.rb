@@ -2,6 +2,7 @@ class Booking < ApplicationRecord
   belongs_to :room
   belongs_to :user
   before_create :consume_credit_if_needed
+  before_save :ensure_start_time_in_utc
   after_create :return_credits_if_pending
 
   validates :name, presence: { message: 'não pode ficar em branco' }, uniqueness: { scope: :user_id, message: 'já está em uso' }
@@ -11,7 +12,7 @@ class Booking < ApplicationRecord
 
   validate :unique_active_booking_per_room_and_time, on: [:create, :update], unless: -> { skip_room_time_validation }
 
-  validate :start_time_must_be_in_the_future
+  #validate :start_time_must_be_in_the_future
 
   scope :scheduled, -> { where('start_time > ? AND canceled_at IS NULL', Time.zone.now) }
   scope :completed, -> { where('start_time < ? AND canceled_at IS NULL', Time.zone.now) }
@@ -118,9 +119,13 @@ class Booking < ApplicationRecord
   end
 
   def start_time_must_be_in_the_future
-    if start_time.before?(Time.zone.now)
+    if start_time.present? && start_time.before?(Time.zone.now)
       errors.add(:start_time, 'Data e horário da reserva deve ser no futuro')
     end
+  end
+
+  def ensure_start_time_in_utc
+    self.start_time = self.start_time.utc if self.start_time.present?
   end
 
   def return_credits_if_pending
