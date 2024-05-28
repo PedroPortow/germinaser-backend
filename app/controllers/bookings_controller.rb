@@ -7,7 +7,7 @@ class BookingsController < ApplicationController
   before_action :set_clinic, only: [:week_available_slots, :rooms_available_slots]
 
   def index
-    @bookings = @bookings.page(params[:page]).per(params[:per_page])
+    @bookings = @bookings.order(start_time: :asc).page(params[:page]).per(params[:per_page])
     render json: @bookings, meta: pagination_info(@bookings), adapter: :json, status: :ok
   end
 
