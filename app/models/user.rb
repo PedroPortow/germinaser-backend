@@ -5,6 +5,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
+  validates :password, length: { in: 2..128 }
+
   enum role: [:user, :admin, :owner]
   after_initialize :set_default_role, if: :new_record?
   after_initialize :set_default_credits, if: :new_record?
