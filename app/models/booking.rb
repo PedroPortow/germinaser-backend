@@ -36,7 +36,7 @@ class Booking < ApplicationRecord
       when 'scheduled'
         bookings = bookings.scheduled
       when 'completed'
-        bookings = bookings.canceled
+        bookings = bookings.completed
     end
 
     bookings = bookings.by_room(filters[:room_id]) if filters[:room_id].present? && filters[:room_id] != 'all'
