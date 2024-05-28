@@ -102,7 +102,10 @@ class Booking < ApplicationRecord
   # TODO: Passar pra um concern
   def consume_credit_if_needed
     return if user.owner?
-    raise "Créditos insuficientes" if user.credits <= 0
+    if user.credits <= 0
+       errors.add(:base, 'Créditos insuficientes')
+       throw :abort
+     end
 
     user.decrement!(:credits)
   end

@@ -18,7 +18,7 @@ class DayAvailableSlotsService
       slots = slots.select { |slot| slot > current_time }
     end
 
-    existing_bookings = Booking.where(room_id: @room.id, start_time: start_period...end_period)
+    existing_bookings = Booking.where(room_id: @room.id, start_time: (start_period - 1.hour)...(end_period + 1.hour))
     existing_fixed_bookings = FixedBooking.where(room_id: @room.id, day_of_week: @date.wday)
 
     slots.reject! do |slot|
