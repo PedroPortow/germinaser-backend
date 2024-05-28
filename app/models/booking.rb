@@ -4,7 +4,7 @@ class Booking < ApplicationRecord
   before_create :consume_credit_if_needed
   after_create :return_credits_if_pending
 
-  validates :name, presence: { message: 'não pode ficar em branco' }, uniqueness: { scope: :user_id, message: 'já está em uso' }
+  validates :name, presence: { message: 'não pode ficar em branco' }
   validates :room, presence: { message: 'não pode ficar em branco' }
   validates :user, presence: { message: 'não pode ficar em branco' }
   validates :start_time, presence: { message: 'não pode ficar em branco' }
