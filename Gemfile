@@ -45,6 +45,7 @@ gem 'devise-jwt'
 gem 'active_model_serializers'
 gem 'kaminari'
 gem 'mutex_m'
+gem 'rails-i18n'
 gem 'bigdecimal'
 
 
@@ -64,4 +65,3 @@ group :development do
   gem 'dotenv-rails'
   # gem "spring"
 end
-

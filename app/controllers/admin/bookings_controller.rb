@@ -28,7 +28,6 @@ class Admin::BookingsController < ApplicationController
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
-
   private
 
   def filter_bookings

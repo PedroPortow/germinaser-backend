@@ -1,17 +1,18 @@
 pt-BR:
   activerecord:
-    models:
-      booking: "Reserva"
-    attributes:
-      booking:
-        name: "Nome"
-        room: "Sala"
-        user: "Usuário"
-        start_time: "Horário de Início"
     errors:
-      messages:
-        taken: "já está em uso"
-        blank: "não pode ficar em branco"
-        invalid: "é inválido"
-      full_messages:
-        format: "%{attribute} %{message}"
+      models:
+        booking:
+          attributes:
+            room:
+              blank: "não pode ficar em branco"
+            name:
+              blank: "não pode ficar em branco"
+              taken: "já está em uso"
+            user:
+              blank: "não pode ficar em branco"
+            start_time:
+              blank: "não pode ficar em branco"
+          messages:
+            insufficient_credits: "Créditos insuficientes"
+            unique_active_booking: "Já existe uma reserva para esta sala no horário especificado"
