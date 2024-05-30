@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index
-    users = User.all
+    users = User.order(:name)
     render json: users, each_serializer: UserSerializer
   end
 
