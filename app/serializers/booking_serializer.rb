@@ -1,5 +1,5 @@
 class BookingSerializer < ActiveModel::Serializer
-  attributes :id, :name, :user_id, :clinic_id, :room_id, :clinic_name, :room_name, :start_time, :date, :status
+  attributes :id, :name, :user_id, :user_name, :clinic_id, :room_id, :clinic_name, :room_name, :start_time, :date, :status
 
   def clinic_id
     object.room.clinic.id
@@ -27,5 +27,9 @@ class BookingSerializer < ActiveModel::Serializer
 
   def status
     object.status
+  end
+
+  def user_name
+    object.user.name
   end
 end
