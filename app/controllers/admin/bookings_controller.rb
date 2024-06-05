@@ -5,7 +5,7 @@ class Admin::BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :update, :cancel]
 
   def index
-    @bookings = @bookings.page(params[:page]).per(params[:per_page])
+    @bookings = @bookings.order(updated_at: :desc).page(params[:page]).per(params[:per_page])
     render json: @bookings, meta: pagination_info(@bookings), adapter: :json, status: :ok
   end
 
